@@ -1,66 +1,49 @@
 import axios from "axios";
-import {
-  ActionCategoryDetailMap,
-  ActionDetailMap,
-  ClientResponse,
-  CombatMonsterDetailMap,
-  ItemDetail,
-} from "../models/Client";
+import { ClientData, ItemDetail } from "../models/Client";
 import { MarketResponse, MarketValue } from "../models/Market";
-import rawData from "../assets/init_client_data.json";
+import clientDataJson from "../assets/client-data.json";
 
-export interface ApiData {
-  gameVersion: string;
-  marketTime?: Date;
-  levelExperienceTable: number[];
-  itemDetails: { [key: string]: ItemDetail & MarketValue };
-  actionDetails: { [key: string]: ActionDetailMap };
-  combatMonsterDetails: { [key: string]: CombatMonsterDetailMap };
-  actionTypeDetails: { [key: string]: ActionCategoryDetailMap };
-  actionCategoryDetails: { [key: string]: ActionCategoryDetailMap };
-  enhancementLevelSuccessRateTable: number[];
-  enhancementLevelTotalBonusMultiplierTable: number[];
-  skillDetails: { [key: string]: ActionCategoryDetailMap };
-}
+export type ApiData = Omit<ClientData, "itemDetails"> & {
+  marketTime: Date | undefined;
+  itemDetails: Record<string, ItemDetail & MarketValue>;
+};
 
 const getApiData = async (): Promise<ApiData> => {
   const marketData = await getMarketData();
+  const clientData = clientDataJson as ClientData;
 
-  const clientData = rawData as ClientResponse;
+  function getMarketValue(it: ItemDetail): MarketValue {
+    return (
+      marketData?.market?.[it.name] ?? {
+        ask: -1,
+        bid: -1,
+        vendor: it.sellPrice,
+      }
+    );
+  }
 
-  const itemDetails: { [key: string]: ItemDetail & MarketValue } = {};
+  const itemDetails = Object.fromEntries(
+    Object.entries(clientData.itemDetails).map(([k, v]) => [
+      k,
+      { ...v, ...getMarketValue(v) },
+    ])
+  );
 
-  Object.entries(clientData.itemDetailMap).forEach(([key, value]) => {
-    itemDetails[key] = {
-      ...value,
-      ...(marketData?.market?.[value.name] ??
-        { ask: -1, bid: -1, vendor: value.sellPrice }),
-    };
-  });
-
-  const result = {
-    gameVersion: clientData.gameVersion,
+  return {
+    ...clientData,
     marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
-    actionDetails: clientData.actionDetailMap,
-    combatMonsterDetails: clientData.combatMonsterDetailMap,
-    actionTypeDetails: clientData.actionTypeDetailMap,
-    actionCategoryDetails: clientData.actionCategoryDetailMap,
-    levelExperienceTable: clientData.levelExperienceTable,
-    enhancementLevelSuccessRateTable:
-      clientData.enhancementLevelSuccessRateTable,
-    enhancementLevelTotalBonusMultiplierTable:
-      clientData.enhancementLevelTotalBonusMultiplierTable,
-    skillDetails: clientData.skillDetailMap,
   };
-
-  return result;
 };
 
 export const getMarketData = (useMedian = true) => {
-  return axios.get<MarketResponse>(`https://raw.githubusercontent.com/holychikenz/MWIApi/main/${useMedian ? "medianmarket" : "milkyapi"
-    }.json`,
-  ).then((x) => x.data);
+  return axios
+    .get<MarketResponse>(
+      `https://raw.githubusercontent.com/holychikenz/MWIApi/main/${
+        useMedian ? "medianmarket" : "milkyapi"
+      }.json`
+    )
+    .then((x) => x.data);
 };
 
 export default getApiData;

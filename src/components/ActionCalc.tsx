@@ -6,14 +6,14 @@ import {
   Tooltip,
   Grid,
 } from "@mantine/core";
-import { ActionDetailMap, Cost } from "../models/Client";
+import { ActionDetail, Cost } from "../models/Client";
 import { Fragment, useEffect, useState } from "react";
 import { ApiData } from "../services/ApiService";
 import { getFriendlyIntString } from "../helpers/Formatting";
 import Icon from "./Icon";
 
 interface Props {
-  action: ActionDetailMap;
+  action: ActionDetail;
   fromRaw: boolean;
   data: ApiData;
 }
