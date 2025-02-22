@@ -7,13 +7,13 @@ import {
   Loader,
   Tabs,
 } from "@mantine/core";
-import { useQuery } from "@tanstack/react-query";
-import getApiData from "./services/ApiService";
+import { getApiData } from "./services/ApiService";
 import { ActionType } from "./models/Client";
 import ActionCategorySelector from "./components/ActionCategorySelector";
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useMemo } from "react";
 import { Skill } from "./helpers/CommonFunctions";
 import ChangeLog from "./components/ChangeLog.tsx";
+import { MarketProvider, useMarket } from "./context/MarketContext.tsx";
 
 const ItemLookup = lazy(() => import("./components/ItemLookup"));
 const Enhancing = lazy(() => import("./components/Enhancing"));
@@ -22,13 +22,16 @@ const Calculator = lazy(() => import("./components/Calculator"));
 const Market = lazy(() => import("./components/Market"));
 
 export default function App() {
-  const { data, isLoading } = useQuery({
-    queryKey: ["apiData"],
-    queryFn: getApiData,
-    refetchInterval: 5 * 60 * 1000,
-  });
+  return (
+    <MarketProvider>
+      <AppWithProviders />
+    </MarketProvider>
+  );
+}
 
-  if (isLoading || !data) return <Loader />;
+function AppWithProviders() {
+  const market = useMarket();
+  const data = useMemo(() => getApiData(market), [market]);
 
   return (
     <AppShell padding="md" footer={

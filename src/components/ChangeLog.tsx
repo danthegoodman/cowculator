@@ -9,6 +9,7 @@ export default function ChangeLog() {
         <ul>
           <li>Forked from <a href="https://github.com/MWISim/cowculator">github.com/MWISim/cowculator</a></li>
           <li>Updated the game data</li>
+          <li>Allow the app to be used before market data has loaded</li>
         </ul>
       </div>
 

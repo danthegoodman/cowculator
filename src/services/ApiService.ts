@@ -8,8 +8,7 @@ export type ApiData = Omit<ClientData, "itemDetails"> & {
   itemDetails: Record<string, ItemDetail & MarketValue>;
 };
 
-const getApiData = async (): Promise<ApiData> => {
-  const marketData = await getMarketData();
+export function getApiData(marketData: MarketResponse | null): ApiData {
   const clientData = clientDataJson as ClientData;
 
   function getMarketValue(it: ItemDetail): MarketValue {
@@ -34,7 +33,7 @@ const getApiData = async (): Promise<ApiData> => {
     marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
   };
-};
+}
 
 export const getMarketData = (useMedian = true) => {
   return axios
@@ -45,5 +44,3 @@ export const getMarketData = (useMedian = true) => {
     )
     .then((x) => x.data);
 };
-
-export default getApiData;
