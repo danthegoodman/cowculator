@@ -1,4 +1,4 @@
-# Cowculator
+# Cowculator3
 
 A calculator for [Milky Way Idle](https://www.milkywayidle.com).
 

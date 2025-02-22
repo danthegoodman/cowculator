@@ -42,10 +42,10 @@ export default function App() {
               </Code>
             </div>
             <div>
-              <a href="https://github.com/MWISim/cowculator" target="_blank" className="footer-link">Contribute</a>
+              <a href="https://github.com/danthegoodman/cowculator" target="_blank" className="footer-link">Contribute</a>
             </div>
             <div>
-              <a href="https://github.com/MWISim/cowculator/issues" target="_blank" className="footer-link">Report Bug / Suggest Feature</a>
+              <a href="https://github.com/danthegoodman/cowculator/issues" target="_blank" className="footer-link">Report Bug / Suggest Feature</a>
             </div>
 
           </Flex>
