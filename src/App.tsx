@@ -5,7 +5,7 @@ import ActionCategorySelector from "./components/ActionCategorySelector";
 import { Suspense, lazy, useMemo } from "react";
 import { Skill } from "./helpers/CommonFunctions";
 import ChangeLog from "./components/ChangeLog.tsx";
-import { MarketProvider, useMarket } from "./context/MarketContext.tsx";
+import { useMarket } from "./context/MarketContext.tsx";
 import { AppFooter } from "./components/AppFooter.tsx";
 
 const ItemLookup = lazy(() => import("./components/ItemLookup"));
@@ -15,14 +15,6 @@ const Calculator = lazy(() => import("./components/Calculator"));
 const Market = lazy(() => import("./components/Market"));
 
 export default function App() {
-  return (
-    <MarketProvider>
-      <AppWithProviders />
-    </MarketProvider>
-  );
-}
-
-function AppWithProviders() {
   const market = useMarket();
   const data = useMemo(() => getApiData(market), [market]);
 

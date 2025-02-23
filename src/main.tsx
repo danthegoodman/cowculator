@@ -2,11 +2,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import { MantineProvider } from "@mantine/core";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import App from "./App";
-
-const queryClient = new QueryClient();
+import { MarketProvider } from "./context/MarketContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -15,10 +12,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       withNormalizeCSS
       theme={{ colorScheme: "dark" }}
     >
-      <QueryClientProvider client={queryClient}>
+      <MarketProvider>
         <App />
-        <ReactQueryDevtools />
-      </QueryClientProvider>
+      </MarketProvider>
     </MantineProvider>
   </React.StrictMode>
 );
