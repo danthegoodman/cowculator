@@ -7,11 +7,11 @@ import { Skill } from "./helpers/CommonFunctions";
 import ChangeLog from "./components/ChangeLog.tsx";
 import { useMarket } from "./context/MarketContext.tsx";
 import { AppFooter } from "./components/AppFooter.tsx";
+import ItemLookup from "./components/ItemLookup";
+import Enhancing from "./components/Enhancing";
+import Gathering from "./components/Gathering";
+import Calculator from "./components/Calculator";
 
-const ItemLookup = lazy(() => import("./components/ItemLookup"));
-const Enhancing = lazy(() => import("./components/Enhancing"));
-const Gathering = lazy(() => import("./components/Gathering"));
-const Calculator = lazy(() => import("./components/Calculator"));
 const Market = lazy(() => import("./components/Market"));
 
 export default function App() {
@@ -53,7 +53,7 @@ export default function App() {
             <Tabs.Panel value="cooking"><ActionCategorySelector skill={Skill.Cooking} data={data} showUpgradeToggle={false} /></Tabs.Panel>
             <Tabs.Panel value="brewing"><ActionCategorySelector skill={Skill.Brewing} data={data} /></Tabs.Panel>
             <Tabs.Panel value="enhancing"><Enhancing data={data} /></Tabs.Panel>
-            <Tabs.Panel value="market"><Market data={data}/></Tabs.Panel>
+            <Tabs.Panel value="market">{tab === "market" ? <Market data={data}/> : null}</Tabs.Panel>
             <Tabs.Panel value="changelog"><ChangeLog/></Tabs.Panel>
           </Tabs>
         </Suspense>

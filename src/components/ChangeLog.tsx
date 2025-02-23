@@ -12,6 +12,7 @@ export default function ChangeLog() {
           <li>Allow the app to be used before market data has loaded</li>
           <li>Add button to manually refresh market data</li>
           <li>Tweaked UI to keep top tab bar always on screen</li>
+          <li>Improve startup time by delaying the load of the Market tab</li>
         </ul>
       </div>
 
