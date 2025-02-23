@@ -4,13 +4,12 @@ import { MarketResponse, MarketValue } from "../models/Market";
 import clientDataJson from "../assets/client-data.json";
 
 export type ApiData = Omit<ClientData, "itemDetails"> & {
-  marketTime: Date | undefined;
   itemDetails: Record<string, ItemDetail & MarketValue>;
 };
 
-export function getApiData(marketData: MarketResponse | null): ApiData {
-  const clientData = clientDataJson as ClientData;
+export const clientData = clientDataJson as ClientData;
 
+export function getApiData(marketData: MarketResponse | null): ApiData {
   function getMarketValue(it: ItemDetail): MarketValue {
     return (
       marketData?.market?.[it.name] ?? {
@@ -30,7 +29,6 @@ export function getApiData(marketData: MarketResponse | null): ApiData {
 
   return {
     ...clientData,
-    marketTime: marketData?.time ? new Date(marketData.time * 1000) : undefined,
     itemDetails,
   };
 }

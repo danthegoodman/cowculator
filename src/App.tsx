@@ -1,12 +1,4 @@
-import {
-  AppShell,
-  Code,
-  Container,
-  Flex,
-  Footer,
-  Loader,
-  Tabs,
-} from "@mantine/core";
+import { AppShell, Container, Loader, Tabs } from "@mantine/core";
 import { getApiData } from "./services/ApiService";
 import { ActionType } from "./models/Client";
 import ActionCategorySelector from "./components/ActionCategorySelector";
@@ -14,6 +6,7 @@ import { Suspense, lazy, useMemo } from "react";
 import { Skill } from "./helpers/CommonFunctions";
 import ChangeLog from "./components/ChangeLog.tsx";
 import { MarketProvider, useMarket } from "./context/MarketContext.tsx";
+import { AppFooter } from "./components/AppFooter.tsx";
 
 const ItemLookup = lazy(() => import("./components/ItemLookup"));
 const Enhancing = lazy(() => import("./components/Enhancing"));
@@ -34,26 +27,7 @@ function AppWithProviders() {
   const data = useMemo(() => getApiData(market), [market]);
 
   return (
-    <AppShell padding="md" footer={
-        <Footer height={{base: 65, sm: 25}}>
-          <Flex gap="xs" justify="center" align="flex-start" direction="row" wrap="wrap">
-            <div>Game Version: <Code>{data.gameVersion}</Code></div>
-            <div>
-              Market Date:&nbsp;
-              <Code>
-                {data.marketTime ? data.marketTime.toLocaleString() : "No data"}
-              </Code>
-            </div>
-            <div>
-              <a href="https://github.com/danthegoodman/cowculator" target="_blank" className="footer-link">Contribute</a>
-            </div>
-            <div>
-              <a href="https://github.com/danthegoodman/cowculator/issues" target="_blank" className="footer-link">Report Bug / Suggest Feature</a>
-            </div>
-
-          </Flex>
-        </Footer>
-      }
+    <AppShell padding="md" footer={<AppFooter/>}
       styles={(theme) => ({
         main: {
           backgroundColor:
