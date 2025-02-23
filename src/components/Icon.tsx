@@ -24,13 +24,13 @@ export default function Icon({ hrid }: Props) {
         hrid.includes("/foraging/") &&
         !foragingActionExceptions.includes(name)
       ) {
-        return `/cowculator/items_sprite.5d6879fa.svg#${name}`;
+        return `/cowculator/items_sprite.b09638bf.svg#${name}`;
       }
-      return `/cowculator/actions_sprite.aa2afca3.svg#${name}`;
+      return `/cowculator/actions_sprite.8d5ceb4a.svg#${name}`;
     } else if (type === "items") {
-      return `/cowculator/items_sprite.5d6879fa.svg#${name}`;
+      return `/cowculator/items_sprite.b09638bf.svg#${name}`;
     } else {
-      return `/cowculator/combat_monsters_sprite.a27599ae.svg#${name}`;
+      return `/cowculator/combat_monsters_sprite.395438a8.svg#${name}`;
     }
   }, [hrid]);
 
