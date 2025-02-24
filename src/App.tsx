@@ -2,7 +2,7 @@ import { Flex, Loader, Tabs, Box } from "@mantine/core";
 import { getApiData } from "./services/ApiService";
 import { ActionType } from "./models/Client";
 import ActionCategorySelector from "./components/ActionCategorySelector";
-import { Suspense, lazy, useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { Skill } from "./helpers/CommonFunctions";
 import ChangeLog from "./components/ChangeLog.tsx";
 import { useMarket } from "./context/MarketContext.tsx";
@@ -11,8 +11,6 @@ import ItemLookup from "./components/ItemLookup";
 import Enhancing from "./components/Enhancing";
 import Gathering from "./components/Gathering";
 import Calculator from "./components/Calculator";
-
-const Market = lazy(() => import("./components/Market"));
 
 export default function App() {
   const market = useMarket();
@@ -34,7 +32,6 @@ export default function App() {
           <Tabs.Tab value="cooking">Cooking</Tabs.Tab>
           <Tabs.Tab value="brewing">Brewing</Tabs.Tab>
           <Tabs.Tab value="enhancing">Enhancing</Tabs.Tab>
-          <Tabs.Tab value="market">Market</Tabs.Tab>
           <Tabs.Tab value="changelog">Change Log</Tabs.Tab>
         </Tabs.List>
       </Tabs>
@@ -53,7 +50,6 @@ export default function App() {
             <Tabs.Panel value="cooking"><ActionCategorySelector skill={Skill.Cooking} data={data} showUpgradeToggle={false} /></Tabs.Panel>
             <Tabs.Panel value="brewing"><ActionCategorySelector skill={Skill.Brewing} data={data} /></Tabs.Panel>
             <Tabs.Panel value="enhancing"><Enhancing data={data} /></Tabs.Panel>
-            <Tabs.Panel value="market">{tab === "market" ? <Market data={data}/> : null}</Tabs.Panel>
             <Tabs.Panel value="changelog"><ChangeLog/></Tabs.Panel>
           </Tabs>
         </Suspense>

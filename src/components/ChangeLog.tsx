@@ -5,6 +5,13 @@ export default function ChangeLog() {
       <hr/>
 
       <div>
+        <strong>Feb 24, 2025</strong>
+        <ul>
+          <li>Removed the Historical Market tab due to issues with the amount of data it was trying to load</li>
+        </ul>
+      </div>
+
+      <div>
         <strong>Feb 22, 2025: Fork and Update</strong>
         <ul>
           <li>Forked from <a href="https://github.com/MWISim/cowculator">github.com/MWISim/cowculator</a></li>
