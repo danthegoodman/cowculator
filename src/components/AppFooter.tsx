@@ -3,7 +3,7 @@ import {
   useIsMarketLoading,
   useMarket,
   useMarketRefresher,
-} from "../context/MarketContext.tsx";
+} from "../context/MarketContext.ts";
 import { clientData } from "../services/ApiService.ts";
 
 export function AppFooter() {

@@ -8,6 +8,7 @@ export default function ChangeLog() {
         <strong>Feb 24, 2025</strong>
         <ul>
           <li>Removed the Historical Market tab due to issues with the amount of data it was trying to load</li>
+          <li>The selected tab is now included in the URL, which allows the back button to work in the app</li>
         </ul>
       </div>
 

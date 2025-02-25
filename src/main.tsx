@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import { MantineProvider } from "@mantine/core";
 import App from "./App";
-import { MarketProvider } from "./context/MarketContext.tsx";
+import { MarketProvider } from "./context/MarketProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
