@@ -1,16 +1,10 @@
 import { useMemo, useState } from "react";
-import {
-  Flex,
-  Group,
-  MultiSelect,
-  NumberInput,
-  Select,
-  Tooltip,
-  Text,
-} from "@mantine/core";
+import { Flex, Group, NumberInput, Select, Text, Tooltip } from "@mantine/core";
 import { useData } from "../context/DataContext.ts";
 import EnhancingCalc from "./EnhancingCalc";
-import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
+import { getTeaBonuses, Skill } from "../helpers/CommonFunctions";
+import { ActionType } from "../models/Client.ts";
+import { TeaSelector } from "./input/TeaSelector.tsx";
 
 export default function Enhancing() {
   const skill = Skill.Enhancing;
@@ -22,21 +16,9 @@ export default function Enhancing() {
   const [teas, setTeas] = useState<string[]>([]);
   const [target, setTarget] = useState<number>(1);
 
-  const availableTeas = useMemo(
-    () =>
-      Object.values(data.itemDetails)
-        .filter(
-          (x) =>
-            x.consumableDetail.usableInActionTypeMap?.["/action_types/enhancing"]
-        )
-        .map((x) => ({
-          label: x.name,
-          value: x.hrid,
-        })),
-    [data.itemDetails]
-  );
+  const type: ActionType = "/action_types/enhancing";
 
-  const { teaError, levelTeaBonus } = getTeaBonuses(teas, skill);
+  const { levelTeaBonus } = getTeaBonuses(teas, skill);
 
   const items = useMemo(
     () =>
@@ -109,15 +91,7 @@ export default function Enhancing() {
           label="Tea costs are not yet included in cost calculations."
           withArrow
         >
-          <MultiSelect
-            clearable
-            data={availableTeas}
-            value={teas}
-            onChange={setTeas}
-            label="Teas"
-            maxSelectedValues={3}
-            error={teaError}
-          />
+          <TeaSelector type={type} teas={teas} onTeasChange={setTeas} />
         </Tooltip>
       </Group>
       <Group>

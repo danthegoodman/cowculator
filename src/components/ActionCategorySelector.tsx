@@ -1,7 +1,6 @@
 import {
   Flex,
   Group,
-  MultiSelect,
   NativeSelect,
   NumberInput,
   Switch,
@@ -11,6 +10,8 @@ import Materials from "./Materials";
 import { useData } from "../context/DataContext.ts";
 import { useMemo, useState } from "react";
 import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
+import { TeaSelector } from "./input/TeaSelector.tsx";
+import { ActionType } from "../models/Client.ts";
 
 interface Props {
   skill: Skill;
@@ -26,17 +27,9 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
   const [toolBonus, setToolBonus] = useState<number | "">(0);
   const [teas, setTeas] = useState([""]);
   const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
-  const { teaError, levelTeaBonus } = getTeaBonuses(teas, skill);
+  const { levelTeaBonus } = getTeaBonuses(teas, skill);
 
-  const availableTeas = Object.values(data.itemDetails)
-    .filter(
-      (x) =>
-        x.consumableDetail.usableInActionTypeMap?.[`/action_types/${skill}`]
-    )
-    .map((x) => ({
-      label: x.name,
-      value: x.hrid,
-    }));
+  const type: ActionType = `/action_types/${skill}`;
 
   const options = useMemo(
     () =>
@@ -122,15 +115,7 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
           min={0}
           formatter={(value) => `${value}%`}
         />
-        <MultiSelect
-          data={availableTeas}
-          value={teas}
-          onChange={setTeas}
-          label="Teas"
-          maxSelectedValues={3}
-          error={teaError}
-          clearable
-        />
+        <TeaSelector type={type} teas={teas} onTeasChange={setTeas}/>
         <NumberInput
           value={xp}
           onChange={setXp}

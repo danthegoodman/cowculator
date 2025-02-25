@@ -1,16 +1,10 @@
-import {
-  Flex,
-  Table,
-  NumberInput,
-  MultiSelect,
-  Tooltip,
-  Grid,
-} from "@mantine/core";
+import { Flex, Grid, NumberInput, Table, Tooltip } from "@mantine/core";
 import { ActionDetail, Cost } from "../models/Client";
 import { Fragment, useEffect, useState } from "react";
 import { getFriendlyIntString } from "../helpers/Formatting";
 import Icon from "./Icon";
 import { useData } from "../context/DataContext.ts";
+import { TeaSelector } from "./input/TeaSelector.tsx";
 
 interface Props {
   action: ActionDetail;
@@ -23,12 +17,6 @@ export default function ActionCalc({ action, fromRaw = false }: Props) {
   }>({});
   const [teas, setTeas] = useState<string[]>([]);
   const data = useData();
-  const availableTeas = Object.values(data.itemDetails)
-    .filter((x) => x.consumableDetail.usableInActionTypeMap?.[action.type])
-    .map((x) => ({
-      label: x.name,
-      value: x.hrid,
-    }));
 
   useEffect(() => {
     setTeas([]);
@@ -199,14 +187,7 @@ export default function ActionCalc({ action, fromRaw = false }: Props) {
         label="Tea costs are not yet included in cost calculations."
         withArrow
       >
-        <MultiSelect
-          clearable
-          data={availableTeas}
-          value={teas}
-          onChange={setTeas}
-          label="Teas"
-          maxSelectedValues={3}
-        />
+        <TeaSelector type={action.type} teas={teas} onTeasChange={setTeas}/>
       </Tooltip>
       <Grid>
         <Grid.Col span={10}>

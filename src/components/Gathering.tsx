@@ -1,11 +1,4 @@
-import {
-  Flex,
-  MultiSelect,
-  NumberInput,
-  Space,
-  Table,
-  Text,
-} from "@mantine/core";
+import { Flex, NumberInput, Space, Table, Text } from "@mantine/core";
 import { useData } from "../context/DataContext.ts";
 import { ActionType, DropTable } from "../models/Client";
 import { useMemo, useState } from "react";
@@ -16,6 +9,7 @@ import {
   getActionSeconds,
   getTeaBonuses,
 } from "../helpers/CommonFunctions";
+import { TeaSelector } from "./input/TeaSelector.tsx";
 
 interface Props {
   skill: Skill;
@@ -37,17 +31,9 @@ export default function Gathering({ skill }: Props) {
     wisdomTeaBonus,
     gatheringTeaBonus,
     efficiencyTeaBonus,
-    teaError,
   } = getTeaBonuses(teas, skill);
 
   const effectiveLevel = level + levelTeaBonus;
-
-  const availableTeas = Object.values(data.itemDetails)
-    .filter((x) => x.consumableDetail.usableInActionTypeMap?.[type])
-    .map((x) => ({
-      label: x.name,
-      value: x.hrid,
-    }));
 
   const actions = Object.values(data.actionDetails)
     .filter((x) => x.type === type)
@@ -271,15 +257,7 @@ export default function Gathering({ skill }: Props) {
           precision={2}
           formatter={(value) => `${value}%`}
         />
-        <MultiSelect
-          data={availableTeas}
-          value={teas}
-          onChange={setTeas}
-          label="Teas"
-          maxSelectedValues={3}
-          error={teaError}
-          clearable
-        />
+       <TeaSelector type={type} teas={teas} onTeasChange={setTeas}/>
       </Flex>
       <Space h="md" />
       <Flex

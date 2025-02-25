@@ -3,11 +3,16 @@ export interface ClientData {
   enhancementLevelSuccessRateTable: number[];
   levelExperienceTable: number[];
 
+  teas: TeaDetail[];
+
   actionCategoryDetails: Record<string, ActionCategoryDetail>;
   actionDetails: Record<string, ActionDetail>;
   combatMonsterDetails: Record<string, CombatMonsterDetail>;
   itemDetails: Record<string, ItemDetail>;
 }
+
+export type ItemHrid = string;
+export type BuffTypeHrid = string;
 
 export interface ActionCategoryDetail {
   hrid: string;
@@ -83,7 +88,6 @@ export interface CombatMonsterDetail {
 }
 
 export interface ItemDetail {
-  consumableDetail: ConsumableDetail;
   enhancementCosts?: Cost[];
   hrid: string;
   itemLevel: number;
@@ -93,6 +97,16 @@ export interface ItemDetail {
   sortIndex: number;
 }
 
-export interface ConsumableDetail {
-  usableInActionTypeMap?: Partial<Record<ActionType, boolean>>;
+export interface TeaDetail {
+  itemHrid: ItemHrid,
+  forActions: ActionType[],
+  isSkillTea: boolean,
+  buffs: Buff[]
+}
+
+export interface Buff {
+  typeHrid: BuffTypeHrid,
+  boost: number,
+  levelBonus: number,
+  duration: number,
 }
