@@ -1,6 +1,5 @@
 import { Box, Flex, Tabs } from "@mantine/core";
 import { getApiData } from "./services/ApiService";
-import { ActionType } from "./models/Client";
 import ActionCategorySelector from "./components/ActionCategorySelector";
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import { Skill } from "./helpers/CommonFunctions";
@@ -47,23 +46,9 @@ export default function App() {
   const panels: Record<keyof typeof tabs, ReactNode> = {
     production: <Calculator data={data} />,
     itemLookup: <ItemLookup data={data} />,
-    milking: (
-      <Gathering skill={Skill.Milking} type={ActionType.Milking} data={data} />
-    ),
-    foraging: (
-      <Gathering
-        skill={Skill.Foraging}
-        type={ActionType.Foraging}
-        data={data}
-      />
-    ),
-    woodcutting: (
-      <Gathering
-        skill={Skill.Woodcutting}
-        type={ActionType.Woodcutting}
-        data={data}
-      />
-    ),
+    milking: <Gathering skill={Skill.Milking} data={data} />,
+    foraging: <Gathering skill={Skill.Foraging} data={data} />,
+    woodcutting: <Gathering skill={Skill.Woodcutting} data={data} />,
     cheesesmithing: (
       <ActionCategorySelector skill={Skill.Cheesesmithing} data={data} />
     ),

@@ -62,19 +62,18 @@ export interface LevelRequirement {
   level: number;
 }
 
-export enum ActionType {
-  Alchemy = "/action_types/alchemy",
-  Brewing = "/action_types/brewing",
-  Cheesesmithing = "/action_types/cheesesmithing",
-  Combat = "/action_types/combat",
-  Cooking = "/action_types/cooking",
-  Crafting = "/action_types/crafting",
-  Enhancing = "/action_types/enhancing",
-  Foraging = "/action_types/foraging",
-  Milking = "/action_types/milking",
-  Tailoring = "/action_types/tailoring",
-  Woodcutting = "/action_types/woodcutting",
-}
+export type ActionType =
+  | "/action_types/alchemy"
+  | "/action_types/brewing"
+  | "/action_types/cheesesmithing"
+  | "/action_types/combat"
+  | "/action_types/cooking"
+  | "/action_types/crafting"
+  | "/action_types/enhancing"
+  | "/action_types/foraging"
+  | "/action_types/milking"
+  | "/action_types/tailoring"
+  | "/action_types/woodcutting"
 
 export interface CombatMonsterDetail {
   hrid: string;

@@ -18,12 +18,11 @@ import {
 } from "../helpers/CommonFunctions";
 
 interface Props {
-  type: ActionType;
   data: ApiData;
   skill: Skill;
 }
 
-export default function Gathering({ type, data, skill }: Props) {
+export default function Gathering({ data, skill }: Props) {
   const [level, setLevel] = useState<number>(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
   const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
@@ -31,6 +30,7 @@ export default function Gathering({ type, data, skill }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
+  const type: ActionType = `/action_types/${skill}`;
 
   const {
     levelTeaBonus,
