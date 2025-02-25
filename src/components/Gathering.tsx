@@ -6,7 +6,7 @@ import {
   Table,
   Text,
 } from "@mantine/core";
-import { ApiData } from "../services/ApiService";
+import { useData } from "../context/DataContext.ts";
 import { ActionType, DropTable } from "../models/Client";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
@@ -18,11 +18,11 @@ import {
 } from "../helpers/CommonFunctions";
 
 interface Props {
-  data: ApiData;
   skill: Skill;
 }
 
-export default function Gathering({ data, skill }: Props) {
+export default function Gathering({ skill }: Props) {
+  const data = useData();
   const [level, setLevel] = useState<number>(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
   const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
@@ -90,12 +90,8 @@ export default function Gathering({ data, skill }: Props) {
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
-      return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    if (item.ask == null || item.bid == null) {
+      return item.bid ?? item.ask ?? item.sellPrice;
     } else {
       return +((item.ask + item.bid) / 2).toFixed(0);
     }

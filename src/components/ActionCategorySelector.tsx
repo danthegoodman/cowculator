@@ -8,17 +8,17 @@ import {
   Text,
 } from "@mantine/core";
 import Materials from "./Materials";
-import { ApiData } from "../services/ApiService";
+import { useData } from "../context/DataContext.ts";
 import { useMemo, useState } from "react";
 import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
 
 interface Props {
   skill: Skill;
-  data: ApiData;
   showUpgradeToggle?: boolean;
 }
 
-export default function ActionCategorySelector({ skill, data, showUpgradeToggle = true }: Props) {
+export default function ActionCategorySelector({ skill, showUpgradeToggle = true }: Props) {
+  const data = useData();
   const [fromRaw, setFromRaw] = useState(false);
   const [level, setLevel] = useState<number | "">(1);
   const [xp, setXp] = useState<number | "">("");
@@ -154,7 +154,6 @@ export default function ActionCategorySelector({ skill, data, showUpgradeToggle 
       {category && (
         <Materials
           actionCategory={category}
-          data={data}
           effectiveLevel={effectiveLevel}
           xp={xp}
           targetLevel={targetLevel}

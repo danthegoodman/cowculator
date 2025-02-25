@@ -1,5 +1,5 @@
 import { Flex, Loader, NumberInput, Table, Title } from "@mantine/core";
-import { ApiData } from "../services/ApiService";
+import { useData } from "../context/DataContext.ts";
 import { Cost, ItemDetail } from "../models/Client";
 import { MarketValue } from "../models/Market";
 import { useState } from "react";
@@ -8,8 +8,7 @@ import Icon from "./Icon";
 import { Duration } from "luxon";
 
 interface Props {
-  data: ApiData;
-  item: ItemDetail & MarketValue;
+  item: ItemDetail & Partial<MarketValue>;
   baseLevel: number;
   toolPercent: number;
   gearSpeed: number;
@@ -21,7 +20,6 @@ const FAIL_XP = 0.1;
 const TARGET_COL = [...Array(21).keys()];
 
 export default function EnhancingCalc({
-  data,
   item,
   baseLevel,
   toolPercent,
@@ -29,6 +27,7 @@ export default function EnhancingCalc({
   target,
   teas,
 }: Props) {
+  const data = useData();
   const toolBonus = toolPercent * 0.01;
   const action = data.actionDetails["/actions/enhancing/enhance"];
   const [protCostOverride, setProtCostOverride] = useState<number | "">("");
@@ -61,12 +60,8 @@ export default function EnhancingCalc({
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
-      return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    if (item.ask == null || item.bid == null) {
+      return item.bid ?? item.ask ?? item.sellPrice;
     } else {
       return +((item.ask + item.bid) / 2).toFixed(0);
     }

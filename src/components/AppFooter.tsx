@@ -4,9 +4,10 @@ import {
   useMarket,
   useMarketRefresher,
 } from "../context/MarketContext.ts";
-import { clientData } from "../services/ApiService.ts";
+import { useData } from "../context/DataContext.ts";
 
 export function AppFooter() {
+  const data = useData();
   return (
     <Footer height={{ base: 65, sm: 25 }}>
       <Flex
@@ -17,7 +18,7 @@ export function AppFooter() {
         wrap="wrap"
       >
         <div>
-          Game Version: <Code>{clientData.gameVersion}</Code>
+          Game Version: <Code>{data.gameVersion}</Code>
         </div>
         <MarketFooter />
         <div>

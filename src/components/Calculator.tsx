@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { Flex, Group, Select, Switch } from "@mantine/core";
-import { ApiData } from "../services/ApiService";
 import ActionCalc from "./ActionCalc";
 import { ActionFunction } from "../models/Client";
+import { useData } from "../context/DataContext.ts";
 
-interface Props {
-  data: ApiData;
-}
-
-export default function Calculator({ data }: Props) {
+export default function Calculator() {
+  const data = useData();
   const [action, setAction] = useState<string | null>(null);
   const [fromRaw, setFromRaw] = useState(false);
 
@@ -50,7 +47,6 @@ export default function Calculator({ data }: Props) {
         <ActionCalc
           fromRaw={fromRaw}
           action={data.actionDetails[action]}
-          data={data}
         />
       )}
     </Flex>

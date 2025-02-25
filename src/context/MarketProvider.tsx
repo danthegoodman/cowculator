@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { MarketResponse } from "../models/Market.ts";
-import { getMarketData } from "../services/ApiService.ts";
+import { getMarketData } from "../services/MarketService.ts";
 import { MarketContext } from "./MarketContext.ts";
 
 export function MarketProvider(props: React.PropsWithChildren) {

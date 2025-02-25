@@ -8,21 +8,21 @@ import {
 } from "@mantine/core";
 import { ActionDetail, Cost } from "../models/Client";
 import { Fragment, useEffect, useState } from "react";
-import { ApiData } from "../services/ApiService";
 import { getFriendlyIntString } from "../helpers/Formatting";
 import Icon from "./Icon";
+import { useData } from "../context/DataContext.ts";
 
 interface Props {
   action: ActionDetail;
   fromRaw: boolean;
-  data: ApiData;
 }
 
-export default function ActionCalc({ action, fromRaw = false, data }: Props) {
+export default function ActionCalc({ action, fromRaw = false }: Props) {
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
   const [teas, setTeas] = useState<string[]>([]);
+  const data = useData();
   const availableTeas = Object.values(data.itemDetails)
     .filter((x) => x.consumableDetail.usableInActionTypeMap?.[action.type])
     .map((x) => ({
@@ -96,13 +96,13 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
 
   const askTotal = rowData.reduce((acc, val) => {
     if (val.hrid === "/items/coin") return acc + val.count;
-    if (val.ask < 1) return acc;
+    if (val.ask == null) return acc;
     return acc + (val.ask ?? 0) * val.count;
   }, 0);
 
   const bidTotal = rowData.reduce((acc, val) => {
     if (val.hrid === "/items/coin") return acc + val.count;
-    return acc + Math.max(val.bid, val.sellPrice) * val.count;
+    return acc + Math.max(val.bid ?? -1, val.sellPrice) * val.count;
   }, 0);
 
   const vendorTotal = rowData.reduce(
@@ -117,12 +117,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
-      return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    if (item.ask == null || item.bid == null) {
+      return item.ask ?? item.bid ?? item.sellPrice;
     } else {
       return +((item.ask + item.bid) / 2).toFixed(0);
     }
@@ -272,8 +268,8 @@ export default function ActionCalc({ action, fromRaw = false, data }: Props) {
               </tr>
               <tr>
                 <th colSpan={2}>Total</th>
-                <td>{getFriendlyIntString(outputItem.ask * outputCount)}</td>
-                <td>{getFriendlyIntString(outputItem.bid * outputCount)}</td>
+                <td>{getFriendlyIntString((outputItem.ask ?? -1) * outputCount)}</td>
+                <td>{getFriendlyIntString((outputItem.bid ?? -1) * outputCount)}</td>
                 <td>
                   {getFriendlyIntString(outputItem.sellPrice * outputCount)}
                 </td>

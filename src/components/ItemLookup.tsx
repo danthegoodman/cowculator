@@ -1,13 +1,10 @@
 import { Flex, Select, Grid, Table, Title } from "@mantine/core";
-import { ApiData } from "../services/ApiService";
+import { useData } from "../context/DataContext.ts";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
 
-interface Props {
-  data: ApiData;
-}
-
-export default function ItemLookup({ data }: Props) {
+export default function ItemLookup() {
+  const data = useData();
   const [item, setItem] = useState<string | null>(null);
 
   const items = useMemo(

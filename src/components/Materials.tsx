@@ -1,5 +1,5 @@
 import { Flex, NumberInput, Table } from "@mantine/core";
-import { ApiData } from "../services/ApiService";
+import { useData } from "../context/DataContext.ts";
 import { Cost } from "../models/Client";
 import { useMemo, useState } from "react";
 import Icon from "./Icon";
@@ -8,7 +8,6 @@ import { Skill, getActionSeconds, getTeaBonuses } from "../helpers/CommonFunctio
 
 interface Props {
   actionCategory: string;
-  data: ApiData;
   effectiveLevel: number;
   xp: number | "";
   targetLevel: number | "";
@@ -21,7 +20,6 @@ interface Props {
 
 export default function Materials({
   actionCategory,
-  data,
   effectiveLevel,
   xp,
   targetLevel,
@@ -35,6 +33,7 @@ export default function Materials({
     [key: string]: number | "";
   }>({});
 
+  const data = useData();
   const {
     wisdomTeaBonus,
     efficiencyTeaBonus,
@@ -76,12 +75,8 @@ export default function Materials({
 
     const item = data.itemDetails[hrid];
 
-    if (item.ask === -1 && item.bid === -1) {
-      return item.sellPrice;
-    } else if (item.ask === -1) {
-      return item.bid;
-    } else if (item.bid === -1) {
-      return item.ask;
+    if (item.ask == null || item.bid == null) {
+      return item.bid ?? item.ask ?? item.sellPrice;
     } else {
       return +((item.ask + item.bid) / 2).toFixed(0);
     }

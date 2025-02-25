@@ -8,16 +8,13 @@ import {
   Tooltip,
   Text,
 } from "@mantine/core";
-import { ApiData } from "../services/ApiService";
+import { useData } from "../context/DataContext.ts";
 import EnhancingCalc from "./EnhancingCalc";
 import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
 
-interface Props {
-  data: ApiData;
-}
-
-export default function Enhancing({ data }: Props) {
+export default function Enhancing() {
   const skill = Skill.Enhancing;
+  const data = useData();
   const [item, setItem] = useState<string | null>(null);
   const [level, setLevel] = useState<number | "">(1);
   const [toolBonus, setToolBonus] = useState<number | "">(0);
@@ -145,7 +142,6 @@ export default function Enhancing({ data }: Props) {
       </Group>
       {item && (
         <EnhancingCalc
-          data={data}
           item={data.itemDetails[item]}
           baseLevel={level || 1}
           toolPercent={toolBonus || 0}

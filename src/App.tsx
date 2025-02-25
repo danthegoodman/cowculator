@@ -1,10 +1,8 @@
 import { Box, Flex, Tabs } from "@mantine/core";
-import { getApiData } from "./services/ApiService";
 import ActionCategorySelector from "./components/ActionCategorySelector";
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { Skill } from "./helpers/CommonFunctions";
 import ChangeLog from "./components/ChangeLog.tsx";
-import { useMarket } from "./context/MarketContext.ts";
 import { AppFooter } from "./components/AppFooter.tsx";
 import ItemLookup from "./components/ItemLookup";
 import Enhancing from "./components/Enhancing";
@@ -13,20 +11,18 @@ import Calculator from "./components/Calculator";
 import { useWindowEvent } from "@mantine/hooks";
 
 export default function App() {
-  const market = useMarket();
-  const data = useMemo(() => getApiData(market), [market]);
-  const [hash, setHashValue] = useState(()=> window.location.hash.slice(1));
+  const [hash, setHashValue] = useState(() => window.location.hash.slice(1));
   useWindowEvent(
     "hashchange",
     useCallback(() => {
       setHashValue(window.location.hash.slice(1));
     }, [])
   );
-  const handleTabChange = (t: string | null)=> {
-    if(t) {
+  const handleTabChange = (t: string | null) => {
+    if (t) {
       window.location.hash = t;
     }
-  }
+  };
 
   const tabs = {
     production: "Production",
@@ -44,25 +40,19 @@ export default function App() {
   };
 
   const panels: Record<keyof typeof tabs, ReactNode> = {
-    production: <Calculator data={data} />,
-    itemLookup: <ItemLookup data={data} />,
-    milking: <Gathering skill={Skill.Milking} data={data} />,
-    foraging: <Gathering skill={Skill.Foraging} data={data} />,
-    woodcutting: <Gathering skill={Skill.Woodcutting} data={data} />,
-    cheesesmithing: (
-      <ActionCategorySelector skill={Skill.Cheesesmithing} data={data} />
-    ),
-    crafting: <ActionCategorySelector skill={Skill.Crafting} data={data} />,
-    tailoring: <ActionCategorySelector skill={Skill.Tailoring} data={data} />,
+    production: <Calculator />,
+    itemLookup: <ItemLookup />,
+    milking: <Gathering skill={Skill.Milking} />,
+    foraging: <Gathering skill={Skill.Foraging} />,
+    woodcutting: <Gathering skill={Skill.Woodcutting} />,
+    cheesesmithing: <ActionCategorySelector skill={Skill.Cheesesmithing} />,
+    crafting: <ActionCategorySelector skill={Skill.Crafting} />,
+    tailoring: <ActionCategorySelector skill={Skill.Tailoring} />,
     cooking: (
-      <ActionCategorySelector
-        skill={Skill.Cooking}
-        data={data}
-        showUpgradeToggle={false}
-      />
+      <ActionCategorySelector skill={Skill.Cooking} showUpgradeToggle={false} />
     ),
-    brewing: <ActionCategorySelector skill={Skill.Brewing} data={data} />,
-    enhancing: <Enhancing data={data} />,
+    brewing: <ActionCategorySelector skill={Skill.Brewing} />,
+    enhancing: <Enhancing />,
     changelog: <ChangeLog />,
   };
 
