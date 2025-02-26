@@ -5,22 +5,21 @@ import { useMemo, useState } from "react";
 import Icon from "./Icon";
 import { getFriendlyIntString } from "../helpers/Formatting";
 import {
-  Skill,
+  GatheringSkill,
   getActionSeconds,
   getTeaBonuses,
 } from "../helpers/CommonFunctions";
 import { TeaSelector } from "./input/TeaSelector.tsx";
+import { useSkillSettings } from "../store/Settings.ts";
 
 interface Props {
-  skill: Skill;
+  skill: GatheringSkill;
 }
 
 export default function Gathering({ skill }: Props) {
   const data = useData();
-  const [level, setLevel] = useState<number>(1);
-  const [toolBonus, setToolBonus] = useState<number | "">(0);
-  const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
-  const [teas, setTeas] = useState([""]);
+  const { settings, set } = useSkillSettings(skill);
+  const { level, toolBonus, gearEfficiency, teas } = settings;
   const [priceOverrides, setPriceOverrides] = useState<{
     [key: string]: number | "";
   }>({});
@@ -151,7 +150,10 @@ export default function Gathering({ skill }: Props) {
     const seconds = getActionSeconds(x.baseTimeCost, toolBonus);
     const exp = x.experienceGain.value * wisdomTeaBonus;
     const levelReq = x.levelRequirement.level;
-    const efficiency = Math.max(1, (100 + (effectiveLevel || 1) - levelReq) / 100) + efficiencyTeaBonus + ((gearEfficiency || 0) / 100);
+    const efficiency =
+      Math.max(1, (100 + (effectiveLevel || 1) - levelReq) / 100) +
+      efficiencyTeaBonus +
+      (gearEfficiency || 0) / 100;
 
     const lootPerAction = getItemsPerAction(x.dropTable).concat(
       getRareItemsPerAction(x.rareDropTable)
@@ -222,7 +224,7 @@ export default function Gathering({ skill }: Props) {
       >
         <NumberInput
           value={level}
-          onChange={(val) => setLevel(val || 1)}
+          onChange={(val) => set({ level: val || 1 })}
           label="Level"
           className="sm"
           min={1}
@@ -239,7 +241,7 @@ export default function Gathering({ skill }: Props) {
         />
         <NumberInput
           value={toolBonus}
-          onChange={setToolBonus}
+          onChange={(value) => set({ toolBonus: value || 0 })}
           label="Tool Bonus"
           className="md"
           withAsterisk
@@ -249,7 +251,7 @@ export default function Gathering({ skill }: Props) {
         />
         <NumberInput
           value={gearEfficiency}
-          onChange={setGearEfficiency}
+          onChange={(value) => set({ gearEfficiency: value || 0 })}
           label="Gear Efficiency"
           className="md"
           withAsterisk
@@ -257,7 +259,11 @@ export default function Gathering({ skill }: Props) {
           precision={2}
           formatter={(value) => `${value}%`}
         />
-       <TeaSelector type={type} teas={teas} onTeasChange={setTeas}/>
+        <TeaSelector
+          type={type}
+          teas={teas}
+          onTeasChange={(value) => set({ teas: value })}
+        />
       </Flex>
       <Space h="md" />
       <Flex

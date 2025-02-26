@@ -5,9 +5,11 @@ import {
   useMarketRefresher,
 } from "../context/MarketContext.ts";
 import { useData } from "../context/DataContext.ts";
+import { useResetSkillSettings } from "../store/Settings.ts";
 
 export function AppFooter() {
   const data = useData();
+  const reset = useResetSkillSettings();
   return (
     <Footer height={{ base: 65, sm: 25 }}>
       <Flex
@@ -28,6 +30,11 @@ export function AppFooter() {
             className="footer-link"
           >
             Contribute & Issue Tracker
+          </a>
+        </div>
+        <div>
+          <a className="footer-link" onClick={reset}>
+            Clear settings
           </a>
         </div>
       </Flex>
