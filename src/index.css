@@ -24,6 +24,7 @@ a:hover {
 }
 a.footer-link {
   font-weight: 400;
+  cursor: pointer;
 }
 
 body {

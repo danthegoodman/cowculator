@@ -1,20 +1,17 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Flex, Group, NumberInput, Select, Text, Tooltip } from "@mantine/core";
 import { useData } from "../context/DataContext.ts";
 import EnhancingCalc from "./EnhancingCalc";
 import { getTeaBonuses, Skill } from "../helpers/CommonFunctions";
 import { ActionType } from "../models/Client.ts";
 import { TeaSelector } from "./input/TeaSelector.tsx";
+import { useSkillSettings } from "../store/Settings.ts";
 
 export default function Enhancing() {
   const skill = Skill.Enhancing;
   const data = useData();
-  const [item, setItem] = useState<string | null>(null);
-  const [level, setLevel] = useState<number | "">(1);
-  const [toolBonus, setToolBonus] = useState<number | "">(0);
-  const [gearSpeed, setGearSpeed] = useState<number | "">(0);
-  const [teas, setTeas] = useState<string[]>([]);
-  const [target, setTarget] = useState<number>(1);
+  const { settings, set } = useSkillSettings("enhancing");
+  const { item, level, toolBonus, gearSpeed, teas, target } = settings;
 
   const type: ActionType = "/action_types/enhancing";
 
@@ -52,7 +49,7 @@ export default function Enhancing() {
       <Group>
         <NumberInput
           value={level}
-          onChange={setLevel}
+          onChange={(value) => set({ level: value || 1 })}
           label="Level"
           className="sm"
           min={0}
@@ -69,7 +66,7 @@ export default function Enhancing() {
         />
         <NumberInput
           value={toolBonus}
-          onChange={setToolBonus}
+          onChange={(value) => set({ toolBonus: value || 0 })}
           label="Tool Bonus"
           className="md"
           withAsterisk
@@ -79,7 +76,7 @@ export default function Enhancing() {
         />
         <NumberInput
           value={gearSpeed}
-          onChange={setGearSpeed}
+          onChange={(value) => set({ gearSpeed: value || 0 })}
           label="Gear Speed"
           className="md"
           withAsterisk
@@ -91,7 +88,11 @@ export default function Enhancing() {
           label="Tea costs are not yet included in cost calculations."
           withArrow
         >
-          <TeaSelector type={type} teas={teas} onTeasChange={setTeas} />
+          <TeaSelector
+            type={type}
+            teas={teas}
+            onTeasChange={(value) => set({ teas: value })}
+          />
         </Tooltip>
       </Group>
       <Group>
@@ -99,14 +100,14 @@ export default function Enhancing() {
           searchable
           size="lg"
           value={item}
-          onChange={setItem}
+          onChange={(value) => set({ item: value })}
           data={itemOptions}
           label="Select an item"
           placeholder="Pick one"
         />
         <NumberInput
           value={target}
-          onChange={(value) => setTarget(value || 1)}
+          onChange={(value) => set({ target: value || 1 })}
           label="Target Level"
           className="md"
           withAsterisk
@@ -114,7 +115,7 @@ export default function Enhancing() {
           max={20}
         />
       </Group>
-      {item && (
+      {item && data.itemDetails[item] && (
         <EnhancingCalc
           item={data.itemDetails[item]}
           baseLevel={level || 1}

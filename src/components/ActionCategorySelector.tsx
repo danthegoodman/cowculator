@@ -9,24 +9,24 @@ import {
 import Materials from "./Materials";
 import { useData } from "../context/DataContext.ts";
 import { useMemo, useState } from "react";
-import { Skill, getTeaBonuses } from "../helpers/CommonFunctions";
+import { ActionSkill, getTeaBonuses } from "../helpers/CommonFunctions";
 import { TeaSelector } from "./input/TeaSelector.tsx";
 import { ActionType } from "../models/Client.ts";
+import { useSkillSettings } from "../store/Settings.ts";
 
 interface Props {
-  skill: Skill;
+  skill: ActionSkill;
   showUpgradeToggle?: boolean;
 }
 
-export default function ActionCategorySelector({ skill, showUpgradeToggle = true }: Props) {
+export default function ActionCategorySelector({
+  skill,
+  showUpgradeToggle = true,
+}: Props) {
   const data = useData();
-  const [fromRaw, setFromRaw] = useState(false);
-  const [level, setLevel] = useState<number | "">(1);
-  const [xp, setXp] = useState<number | "">("");
-  const [targetLevel, setTargetLevel] = useState<number | "">("");
-  const [toolBonus, setToolBonus] = useState<number | "">(0);
-  const [teas, setTeas] = useState([""]);
-  const [gearEfficiency, setGearEfficiency] = useState<number | "">(0)
+  const { settings, set } = useSkillSettings(skill);
+  const { fromRaw, gearEfficiency, level, targetLevel, teas, toolBonus, xp } =
+    settings;
   const { levelTeaBonus } = getTeaBonuses(teas, skill);
 
   const type: ActionType = `/action_types/${skill}`;
@@ -73,12 +73,12 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
             offLabel="BUY UPGRADE ITEM"
             size="xl"
             checked={fromRaw}
-            onChange={(event) => setFromRaw(event.currentTarget.checked)}
+            onChange={(event) => set({ fromRaw: event.currentTarget.checked })}
           />
         )}
         <NumberInput
           value={level}
-          onChange={setLevel}
+          onChange={(value) => set({ level: value || 1 })}
           label="Level"
           className="sm"
           min={1}
@@ -95,7 +95,7 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
         />
         <NumberInput
           value={toolBonus}
-          onChange={setToolBonus}
+          onChange={(value) => set({ toolBonus: value || 0 })}
           label="Tool Bonus"
           className="md"
           withAsterisk
@@ -106,7 +106,7 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
         />
         <NumberInput
           value={gearEfficiency}
-          onChange={setGearEfficiency}
+          onChange={(value) => set({ gearEfficiency: value || 0 })}
           label="Gear Efficiency"
           className="md"
           withAsterisk
@@ -115,10 +115,14 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
           min={0}
           formatter={(value) => `${value}%`}
         />
-        <TeaSelector type={type} teas={teas} onTeasChange={setTeas}/>
+        <TeaSelector
+          type={type}
+          teas={teas}
+          onTeasChange={(value) => set({ teas: value })}
+        />
         <NumberInput
           value={xp}
-          onChange={setXp}
+          onChange={(value) => set({ xp: value || 0 })}
           label="Experience"
           className="md"
           min={0}
@@ -127,7 +131,7 @@ export default function ActionCategorySelector({ skill, showUpgradeToggle = true
         />
         <NumberInput
           value={targetLevel}
-          onChange={setTargetLevel}
+          onChange={(value) => set({ targetLevel: value || 1 })}
           label="Target Level"
           className="md"
           min={1}

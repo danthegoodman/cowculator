@@ -1,17 +1,11 @@
 export const getActionSeconds = (
   baseTimeCost: number,
-  toolBonus: number | "",
+  toolBonus: number | ""
 ) => {
-  return Math.max(
-    3,
-    baseTimeCost / 1000000000 / (1 + (toolBonus || 0) / 100),
-  );
+  return Math.max(3, baseTimeCost / 1000000000 / (1 + (toolBonus || 0) / 100));
 };
 
-export const getTeaBonuses = (
-  teas: string[],
-  skill: Skill,
-) => {
+export const getTeaBonuses = (teas: string[], skill: Skill) => {
   const artisanTeaBonus = teas.some((x) => x === "/items/artisan_tea")
     ? 0.9
     : 1;
@@ -35,9 +29,10 @@ export const getTeaBonuses = (
     ? 3
     : 0;
 
-  const teaError = teas.filter((x) => x.includes(`${skill}_tea`)).length > 1
-    ? `Cannot use both ${skill} teas.`
-    : null;
+  const teaError =
+    teas.filter((x) => x.includes(`${skill}_tea`)).length > 1
+      ? `Cannot use both ${skill} teas.`
+      : null;
 
   return {
     teaError,
@@ -51,14 +46,33 @@ export const getTeaBonuses = (
   };
 };
 
-export enum Skill {
-  Brewing = "brewing",
-  Cheesesmithing = "cheesesmithing",
-  Cooking = "cooking",
-  Crafting = "crafting",
-  Enhancing = "enhancing",
-  Foraging = "foraging",
-  Milking = "milking",
-  Tailoring = "tailoring",
-  Woodcutting = "woodcutting",
-}
+export const GatheringSkill = {
+  Milking: "milking",
+  Foraging: "foraging",
+  Woodcutting: "woodcutting",
+} as const;
+
+export const ActionSkill = {
+  Brewing: "brewing",
+  Cheesesmithing: "cheesesmithing",
+  Cooking: "cooking",
+  Crafting: "crafting",
+  Tailoring: "tailoring",
+} as const;
+
+export const EnchantingSkill = {
+  Enhancing: "enhancing",
+} as const;
+
+export const Skill = {
+  ...GatheringSkill,
+  ...ActionSkill,
+  ...EnchantingSkill,
+} as const;
+
+export type GatheringSkill =
+  (typeof GatheringSkill)[keyof typeof GatheringSkill];
+export type ActionSkill = (typeof ActionSkill)[keyof typeof ActionSkill];
+export type EnchantingSkill =
+  (typeof EnchantingSkill)[keyof typeof EnchantingSkill];
+export type Skill = (typeof Skill)[keyof typeof Skill];
